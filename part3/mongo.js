@@ -23,8 +23,8 @@ const phoneSchema = new mongoose.Schema({
 const Person = mongoose.model("Person", phoneSchema);
 
 if (process.argv.length > 3) {
- const name = process.argv[3];
- const number = process.argv[4];
+  const name = process.argv[3];
+  const number = process.argv[4];
 
   const person = new Person({
     name: name,
@@ -37,11 +37,10 @@ if (process.argv.length > 3) {
   });
 } else if (process.argv.length === 3) {
   Person.find({}).then((result) => {
-    console.log(`Phonebook:`)
+    console.log(`Phonebook:`);
     result.forEach((person) => {
       console.log(`${person.name} ${person.number}`);
     });
     mongoose.connection.close();
   });
 }
-
