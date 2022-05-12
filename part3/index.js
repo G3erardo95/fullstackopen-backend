@@ -17,12 +17,14 @@ const errorHandler = (error, request, response, next) => {
     case "CastError":
       return response.status(400).send({ error: "malformatted id" });
       break;
+    case "ValidationError":
+      return response.status(400).json({ error: error.message });
+      break;
     case "ParallelSaveError":
       return response
         .status(409)
         .send({ error: "the instance of this document is already saving" });
       break;
-
     case "MongooseError":
       return response
         .status(500)
@@ -61,21 +63,7 @@ app.get("/api/persons/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-
-app.delete("/api/persons/:id", (request, response, next) => {
-  Person.findByIdAndRemove(request.params.id)
-    .then((result) => {
-      response.status(204).end();
-    })
-    .catch((error) => next(error));
-});
-
-// const generateId = () => {
-//   const maxId = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0;
-//   return maxId + 1;
-// };
-
-app.post("/api/persons", morgan(":body"), (request, response) => {
+app.post("/api/persons", morgan(":body"), (request, response, next) => {
   const body = request.body;
   // const existingNames = persons.map((person) => (names = person.name));
 
@@ -95,27 +83,39 @@ app.post("/api/persons", morgan(":body"), (request, response) => {
     date: new Date(),
   });
 
-  app.put("/api/persons/:id", (request, response, next) => {
-    const body = request.body;
-
-    const person = {
-      name: body.name,
-      number: body.number,
-    };
-
-    Person.findByIdAndUpdate(request.params.id, person, { new: true })
-      .then((updatedPerson) => {
-        response.json(updatedPerson);
-      })
-      .catch((error) => next(error));
-  });
-
   // persons = persons.concat(person);
 
   person
     .save()
     .then((savedPerson) => {
       response.json(savedPerson);
+    })
+    .catch((error) => next(error));
+});
+
+app.delete("/api/persons/:id", (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then((result) => {
+      response.status(204).end();
+    })
+    .catch((error) => next(error));
+});
+
+// const generateId = () => {
+//   const maxId = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0;
+//   return maxId + 1;
+// };
+
+app.put("/api/persons/:id", (request, response, next) => {
+  const { number } = request.body;
+
+  Person.findByIdAndUpdate(
+    request.params.id,
+    { number },
+    { new: true, runValidators: true, context: "query" }
+  )
+    .then((updatedPerson) => {
+      response.json(updatedPerson);
     })
     .catch((error) => next(error));
 });
