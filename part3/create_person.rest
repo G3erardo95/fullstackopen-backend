@@ -1,7 +1,14 @@
-POST http://localhost:3001/api/persons
+POST http://smear-backend.test/api/v1/users
 Content-Type: application/json
 
 {
-    "name":"G",
-    "number":"360"
+  "first_name": "Gerardo",
+  "last_name": "DeBlasio",
+  "email": "gerardo.dbl@gmail.com",
+  "privacy": true,
+  "password": "password",
+  "password_confirmation": "password",
+  "avatar": {
+    "id": 1
+  }
 }
