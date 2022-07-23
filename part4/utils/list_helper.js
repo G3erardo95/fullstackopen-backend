@@ -15,6 +15,18 @@ const totalLikes = (blogs) => {
     : getSumByKey(blogs, 'likes')
   }
 
+const favoriteBlog = (blogs) => {
+
+  return blogs.length === 0
+  ? [{}]
+  : blogs.reduce((accumulator, currentValue, index) => {
+    if (index == 0) {
+      return currentValue;
+    }
+    return accumulator.likes > currentValue.likes ? accumulator : currentValue;
+  });
+}
+
 module.exports = {
-  dummy, totalLikes
+  dummy, totalLikes, favoriteBlog
 }
