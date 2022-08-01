@@ -1,3 +1,5 @@
+const _ = require('lodash')
+
 const dummy = (blogs) => {
 const dummyBlog = "Hi! There is no blog here! Try adding one right now!"
   
@@ -20,7 +22,7 @@ const favoriteBlog = (blogs) => {
   return blogs.length === 0
   ? [{}]
   : blogs.reduce((accumulator, currentValue, index) => {
-    if (index == 0) {
+    if (index === 0) {
       return currentValue;
     }
     return accumulator.likes > currentValue.likes ? accumulator : currentValue;
