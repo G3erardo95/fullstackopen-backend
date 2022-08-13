@@ -62,7 +62,7 @@ beforeEach(async () => {
   await Blog.deleteMany({})
 
   const blogObjects = helper.initialBlogs
-    .map(blog => new Note(blog))
+    .map(blog => new Blog(blog))
   const promiseArray = blogObjects.map(blog => blog.save())
   await Promise.all(promiseArray)
 });
